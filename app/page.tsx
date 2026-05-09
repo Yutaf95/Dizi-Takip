@@ -398,42 +398,31 @@ export default function Home() {
 
           {/* ── Hero Banner ── */}
           {heroEntries.length > 0 && (
-            <div className="hero-section" style={{ marginBottom: 48, display: 'flex', position: 'relative' }}>
+            <div className="hero-section" style={{ marginBottom: 48, display: 'flex', position: 'relative', background: 'var(--bg-primary)' }}>
               {[0, 1].map(offset => {
                 // Eğer sadece 1 dizi varsa 2. paneli çizme
                 if (heroEntries.length === 1 && offset === 1) return null;
                 const entry = heroEntries[(heroIndex + offset) % heroEntries.length];
+                
+                const maskImage = heroEntries.length > 1 
+                  ? (offset === 0 ? 'linear-gradient(to right, black 70%, transparent 100%)' : 'linear-gradient(to right, transparent 0%, black 30%)')
+                  : 'none';
+
                 return (
-                  <div key={`${entry.id}-${offset}-${heroIndex}`} style={{ flex: 1, position: 'relative', borderRight: offset === 0 && heroEntries.length > 1 ? '1px solid var(--border)' : 'none', overflow: 'hidden' }}>
+                  <div key={`${entry.id}-${offset}-${heroIndex}`} style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
                     <img
                       src={`https://image.tmdb.org/t/p/original${entry.poster_url}`}
                       alt={entry.title}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', animation: 'heroFadeIn 0.8s ease' }}
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover', 
+                        objectPosition: 'center 20%', 
+                        animation: 'heroFadeIn 0.8s ease',
+                        WebkitMaskImage: maskImage,
+                        maskImage: maskImage
+                      }}
                     />
-                    <div className="hero-overlay" />
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '30px 30px 24px' }}>
-                      <div style={{ display: 'flex', gap: 8, marginBottom: 12, alignItems: 'center' }}>
-                        <span style={{
-                          fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 99,
-                          background: 'var(--accent)', color: 'white', textTransform: 'uppercase', letterSpacing: '0.06em',
-                        }}>
-                          {entry.type === 'show' ? 'Dizi' : 'Film'}
-                        </span>
-                        {entry.type === 'show' && entry.current_season > 0 && (
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>
-                            S{entry.current_season} B{entry.current_episode}
-                          </span>
-                        )}
-                      </div>
-                      <h2 style={{ fontSize: heroEntries.length > 1 ? 32 : 40, fontWeight: 900, color: 'white', lineHeight: 1.1, marginBottom: 20, maxWidth: 520, textShadow: '0 2px 20px rgba(0,0,0,0.8)' }}>
-                        {entry.title}
-                      </h2>
-                      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                        <button className="btn-accent" onClick={() => handleCardClick(entry)}>
-                          <Play size={16} fill="white" /> Detaylar
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 );
               })}
