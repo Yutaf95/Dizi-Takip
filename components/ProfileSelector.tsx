@@ -78,11 +78,7 @@ export function ProfileSelector({ onSelect }: ProfileSelectorProps) {
       </div>
 
       {/* Profile grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: 24,
-      }}>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 px-6 max-w-lg md:max-w-none">
         {PROFILES.map(profile => (
           <button
             key={profile.id}
@@ -98,16 +94,15 @@ export function ProfileSelector({ onSelect }: ProfileSelectorProps) {
               transform: hovered === profile.id ? 'translateY(-6px) scale(1.04)' : 'none',
             }}
           >
-            {/* Avatar circle */}
             <div style={{
-              width: 100, height: 100, borderRadius: 20,
+              width: 80, height: 80, borderRadius: 20,
               background: `linear-gradient(135deg, ${profile.color}22, ${profile.color}44)`,
               border: `2px solid ${hovered === profile.id ? profile.color : 'rgba(255,255,255,0.1)'}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 44,
+              fontSize: 36,
               boxShadow: hovered === profile.id ? `0 0 32px ${profile.glow}, 0 8px 32px rgba(0,0,0,0.4)` : '0 4px 16px rgba(0,0,0,0.3)',
               transition: 'all 0.2s ease',
-            }}>
+            }} className="md:w-[100px] md:h-[100px] md:text-[44px]">
               {profile.emoji}
             </div>
             <span style={{

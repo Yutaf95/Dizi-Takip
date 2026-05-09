@@ -187,17 +187,18 @@ export function ShowDetail({ entry, onBack, onUpdate, onDelete }: ShowDetailProp
         </button>
 
         {/* Bottom info */}
-        <div style={{ position: 'absolute', bottom: 24, left: 32, right: 32, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 20 }}>
-          <div style={{ display: 'flex', gap: 20, alignItems: 'flex-end' }}>
+        {/* Bottom info */}
+        <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-8 md:right-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="flex gap-4 items-end">
             {entry.poster_url && (
               <img
                 src={`https://image.tmdb.org/t/p/w200${entry.poster_url}`}
                 alt=""
-                style={{ width: 80, height: 120, objectFit: 'cover', borderRadius: 10, border: '2px solid rgba(255,255,255,0.15)', boxShadow: '0 8px 32px rgba(0,0,0,0.6)', flexShrink: 0 }}
+                className="w-16 h-24 md:w-20 md:h-[120px] object-cover rounded-lg border-2 border-white/15 shadow-2xl shrink-0"
               />
             )}
             <div>
-              <h1 style={{ fontSize: 32, fontWeight: 900, color: 'white', lineHeight: 1.1, marginBottom: 10, textShadow: '0 2px 16px rgba(0,0,0,0.7)' }}>
+              <h1 className="text-2xl md:text-4xl font-black text-white leading-tight mb-2 md:mb-3 drop-shadow-md line-clamp-2">
                 {entry.title}
               </h1>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -251,11 +252,11 @@ export function ShowDetail({ entry, onBack, onUpdate, onDelete }: ShowDetailProp
           </div>
 
           {/* Save & Delete */}
-          <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
-            <button onClick={handleDelete} style={{ padding: '10px 14px', borderRadius: 10, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+          <div className="flex gap-2 shrink-0 md:justify-end w-full md:w-auto">
+            <button onClick={handleDelete} className="p-2.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-500 flex items-center justify-center shrink-0">
               <Trash2 size={18} />
             </button>
-            <button onClick={handleSave} disabled={saving} style={{ padding: '10px 22px', borderRadius: 10, background: 'var(--accent)', border: 'none', color: 'white', cursor: 'pointer', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button onClick={handleSave} disabled={saving} className="flex-1 md:flex-none px-6 py-2.5 rounded-lg bg-[var(--accent)] font-bold text-sm text-white flex items-center justify-center gap-2">
               <Save size={16} /> {saving ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
           </div>

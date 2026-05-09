@@ -7,7 +7,7 @@ import { DetailDrawer } from '@/components/DetailDrawer';
 import { ShowDetail } from '@/components/ShowDetail';
 import { NotificationBanner, ShowNotification } from '@/components/NotificationBanner';
 import { ProfileSelector, PROFILES, Profile } from '@/components/ProfileSelector';
-import { Plus, Search, Film, Tv, BookMarked, CheckCircle2, Play, Layers, Bell, Clapperboard, ChevronDown } from 'lucide-react';
+import { Plus, Search, Film, Tv, BookMarked, CheckCircle2, Play, Layers, Bell, Clapperboard, ChevronDown, Menu } from 'lucide-react';
 
 const SHOW_TABS = [
   { id: 'watching', label: 'İzleniyor', icon: <Play size={15} /> },
@@ -26,6 +26,7 @@ export default function Home() {
   const [activeProfile, setActiveProfile] = useState<Profile | null>(null);
   const [showProfileSelector, setShowProfileSelector] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,12 +72,14 @@ export default function Home() {
     setEntries([]);
     setActiveTab('watching');
     setContentType('shows');
+    setIsMobileMenuOpen(false);
   };
 
   // Reset activeTab when switching content type
   const handleContentTypeChange = (type: 'shows' | 'movies') => {
     setContentType(type);
     setActiveTab(type === 'shows' ? 'watching' : 'want');
+    setIsMobileMenuOpen(false);
   };
 
   // Rotate hero banner every 6 seconds
@@ -212,8 +215,22 @@ export default function Home() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)' }}>
 
+      <div className={`mobile-overlay ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)} />
+
+      <div className="mobile-top-bar">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Layers size={18} color="white" />
+          </div>
+          <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)' }}>Takipçi</span>
+        </div>
+        <button onClick={() => setIsMobileMenuOpen(true)} style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)' }}>
+          <Menu size={24} />
+        </button>
+      </div>
+
       {/* ───── Sidebar ───── */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         {/* Logo */}
         <div style={{ padding: '0 24px 24px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -316,7 +333,7 @@ export default function Home() {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => { setActiveTab(tab.id); setIsMobileMenuOpen(false); }}
                 className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
               >
                 {tab.icon}
