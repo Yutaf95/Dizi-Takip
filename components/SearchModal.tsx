@@ -44,8 +44,14 @@ export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: Se
   }, [query]);
 
   useEffect(() => {
-    if (isOpen && watchingEntries.length > 0) {
-      fetchRecommendations();
+    if (isOpen) {
+      if (watchingEntries.length > 0) {
+        fetchRecommendations();
+      }
+    } else {
+      setQuery('');
+      setResults([]);
+      setAddedIds(new Set());
     }
   }, [isOpen]);
 
@@ -54,8 +60,10 @@ export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: Se
     const seen = new Set<number>();
     const recs: RecommendedItem[] = [];
 
-    // Pick up to 3 watching shows to get recommendations from
-    const sources = watchingEntries.filter(e => e.type === 'show').slice(0, 3);
+    // Filter to get only shows, then shuffle to get different recommendations each time
+    const shows = watchingEntries.filter(e => e.type === 'show');
+    const shuffledShows = [...shows].sort(() => 0.5 - Math.random());
+    const sources = shuffledShows.slice(0, 3);
 
     for (const show of sources) {
       try {
