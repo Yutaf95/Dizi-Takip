@@ -397,54 +397,63 @@ export default function Home() {
           />
 
           {/* ── Hero Banner ── */}
-          {featuredEntry && (
-            <div className="hero-section" style={{ marginBottom: 48 }}>
-              <img
-                key={featuredEntry.id}
-                src={`https://image.tmdb.org/t/p/original${featuredEntry.poster_url}`}
-                alt={featuredEntry.title}
-                style={{ animation: 'heroFadeIn 0.8s ease' }}
-              />
-              <div className="hero-overlay" />
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '40px 40px 36px' }}>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 12, alignItems: 'center' }}>
-                  <span style={{
-                    fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 99,
-                    background: 'var(--accent)', color: 'white', textTransform: 'uppercase', letterSpacing: '0.06em',
-                  }}>
-                    {featuredEntry.type === 'show' ? 'Dizi' : 'Film'}
-                  </span>
-                  {featuredEntry.type === 'show' && featuredEntry.current_season > 0 && (
-                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
-                      S{featuredEntry.current_season} B{featuredEntry.current_episode}
-                    </span>
-                  )}
-                </div>
-                <h2 style={{ fontSize: 40, fontWeight: 900, color: 'white', lineHeight: 1.1, marginBottom: 20, maxWidth: 520, textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>
-                  {featuredEntry.title}
-                </h2>
-                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <button className="btn-accent" onClick={() => handleCardClick(featuredEntry)}>
-                    <Play size={16} fill="white" /> Detaylar
-                  </button>
-                  {heroEntries.length > 1 && (
-                    <div style={{ display: 'flex', gap: 6, marginLeft: 8 }}>
-                      {heroEntries.map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setHeroIndex(i)}
-                          style={{
-                            width: i === heroIndex % heroEntries.length ? 20 : 6,
-                            height: 6, borderRadius: 99, border: 'none', cursor: 'pointer',
-                            background: i === heroIndex % heroEntries.length ? 'white' : 'rgba(255,255,255,0.35)',
-                            transition: 'all 0.3s', padding: 0,
-                          }}
-                        />
-                      ))}
+          {heroEntries.length > 0 && (
+            <div className="hero-section" style={{ marginBottom: 48, display: 'flex', position: 'relative' }}>
+              {[0, 1].map(offset => {
+                // Eğer sadece 1 dizi varsa 2. paneli çizme
+                if (heroEntries.length === 1 && offset === 1) return null;
+                const entry = heroEntries[(heroIndex + offset) % heroEntries.length];
+                return (
+                  <div key={`${entry.id}-${offset}-${heroIndex}`} style={{ flex: 1, position: 'relative', borderRight: offset === 0 && heroEntries.length > 1 ? '1px solid var(--border)' : 'none', overflow: 'hidden' }}>
+                    <img
+                      src={`https://image.tmdb.org/t/p/original${entry.poster_url}`}
+                      alt={entry.title}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', animation: 'heroFadeIn 0.8s ease' }}
+                    />
+                    <div className="hero-overlay" />
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '30px 30px 24px' }}>
+                      <div style={{ display: 'flex', gap: 8, marginBottom: 12, alignItems: 'center' }}>
+                        <span style={{
+                          fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 99,
+                          background: 'var(--accent)', color: 'white', textTransform: 'uppercase', letterSpacing: '0.06em',
+                        }}>
+                          {entry.type === 'show' ? 'Dizi' : 'Film'}
+                        </span>
+                        {entry.type === 'show' && entry.current_season > 0 && (
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>
+                            S{entry.current_season} B{entry.current_episode}
+                          </span>
+                        )}
+                      </div>
+                      <h2 style={{ fontSize: heroEntries.length > 1 ? 32 : 40, fontWeight: 900, color: 'white', lineHeight: 1.1, marginBottom: 20, maxWidth: 520, textShadow: '0 2px 20px rgba(0,0,0,0.8)' }}>
+                        {entry.title}
+                      </h2>
+                      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                        <button className="btn-accent" onClick={() => handleCardClick(entry)}>
+                          <Play size={16} fill="white" /> Detaylar
+                        </button>
+                      </div>
                     </div>
-                  )}
+                  </div>
+                );
+              })}
+
+              {heroEntries.length > 1 && (
+                <div style={{ position: 'absolute', bottom: 24, right: 30, display: 'flex', gap: 6, zIndex: 10 }}>
+                  {heroEntries.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setHeroIndex(i)}
+                      style={{
+                        width: i === heroIndex % heroEntries.length ? 20 : 6,
+                        height: 6, borderRadius: 99, border: 'none', cursor: 'pointer',
+                        background: i === heroIndex % heroEntries.length ? 'white' : 'rgba(255,255,255,0.35)',
+                        transition: 'all 0.3s', padding: 0,
+                      }}
+                    />
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           )}
 
