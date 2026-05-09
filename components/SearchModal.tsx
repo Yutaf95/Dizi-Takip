@@ -105,7 +105,7 @@ export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: Se
   };
 
   const handleAdd = (item: any, status?: string) => {
-    setAddedIds(prev => new Set([...prev, item.id]));
+    setAddedIds(prev => new Set(prev).add(item.id));
     onAdd(item, status);
   };
 
