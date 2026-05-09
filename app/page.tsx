@@ -482,7 +482,7 @@ export default function Home() {
                 </button>
               </div>
             ) : (
-              <div className="scroll-row">
+              <div className="wrap-row">
                 {filtered.map(entry => (
                   <div
                     key={entry.id}
@@ -517,57 +517,7 @@ export default function Home() {
             )}
           </div>
 
-          {/* ── All Other Sections ── */}
-          {currentTabs.filter(t => t.id !== activeTab).map(tab => {
-            const tabEntries = entries.filter(e =>
-              e.type === (contentType === 'shows' ? 'show' : 'movie') && e.status === tab.id
-            );
-            if (tabEntries.length === 0) return null;
-            return (
-              <div key={tab.id} style={{ marginTop: 48 }}>
-                <div className="section-header">
-                  <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <span className="section-line" />
-                    {tab.label}
-                  </h3>
-                  <button
-                    onClick={() => setActiveTab(tab.id)}
-                    style={{ fontSize: 13, color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
-                  >
-                    Tümü →
-                  </button>
-                </div>
-                <div className="scroll-row">
-                  {tabEntries.slice(0, 10).map(entry => (
-                    <div
-                      key={entry.id}
-                      className="poster-card animate-in"
-                      onClick={() => handleCardClick(entry)}
-                    >
-                      <img
-                        src={entry.poster_url ? `https://image.tmdb.org/t/p/w342${entry.poster_url}` : NO_POSTER}
-                        alt={entry.title}
-                        loading="lazy"
-                      />
-                      <div className="poster-card-overlay">
-                        <p style={{ fontSize: 12, fontWeight: 600, color: 'white', lineHeight: 1.3 }}>{entry.title}</p>
-                        {entry.type === 'show' && (
-                          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>S{entry.current_season} B{entry.current_episode}</p>
-                        )}
-                      </div>
-                      <div style={{
-                        position: 'absolute', top: 8, right: 8,
-                        background: entry.type === 'show' ? 'rgba(59,130,246,0.9)' : 'rgba(230,57,70,0.9)',
-                        borderRadius: 6, padding: '2px 6px',
-                      }}>
-                        {entry.type === 'show' ? <Tv size={10} color="white" /> : <Film size={10} color="white" />}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          {/* ── All Other Sections Removed per user request ── */}
         </div>
       </div>
 
