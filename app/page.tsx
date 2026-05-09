@@ -397,35 +397,28 @@ export default function Home() {
           />
 
           {/* ── Hero Banner ── */}
-          {heroEntries.length > 0 && (
-            <div className="hero-section" style={{ marginBottom: 48, display: 'flex', position: 'relative', background: 'var(--bg-primary)' }}>
-              {[0, 1].map(offset => {
-                // Eğer sadece 1 dizi varsa 2. paneli çizme
-                if (heroEntries.length === 1 && offset === 1) return null;
-                const entry = heroEntries[(heroIndex + offset) % heroEntries.length];
-                
-                const maskImage = heroEntries.length > 1 
-                  ? (offset === 0 ? 'linear-gradient(to right, black 70%, transparent 100%)' : 'linear-gradient(to right, transparent 0%, black 30%)')
-                  : 'none';
+          {featuredEntry && (
+            <div className="hero-section" style={{ marginBottom: 48, position: 'relative', borderRadius: 16, overflow: 'hidden', background: '#000' }}>
+              
+              {/* Blur Background Layer */}
+              <div style={{ position: 'absolute', inset: -40, zIndex: 0 }}>
+                <img
+                  key={`bg-${featuredEntry.id}`}
+                  src={`https://image.tmdb.org/t/p/original${featuredEntry.poster_url}`}
+                  alt=""
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(30px) brightness(0.3)', transform: 'scale(1.1)', animation: 'heroFadeIn 0.8s ease' }}
+                />
+              </div>
 
-                return (
-                  <div key={`${entry.id}-${offset}-${heroIndex}`} style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-                    <img
-                      src={`https://image.tmdb.org/t/p/original${entry.poster_url}`}
-                      alt={entry.title}
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
-                        objectFit: 'cover', 
-                        objectPosition: 'center 20%', 
-                        animation: 'heroFadeIn 0.8s ease',
-                        WebkitMaskImage: maskImage,
-                        maskImage: maskImage
-                      }}
-                    />
-                  </div>
-                );
-              })}
+              {/* Main Poster Layer (Centered & Contained) */}
+              <div style={{ position: 'absolute', inset: 0, zIndex: 1, display: 'flex', justifyContent: 'center' }}>
+                <img
+                  key={`main-${featuredEntry.id}`}
+                  src={`https://image.tmdb.org/t/p/original${featuredEntry.poster_url}`}
+                  alt={featuredEntry.title}
+                  style={{ height: '100%', objectFit: 'contain', animation: 'heroFadeIn 0.8s ease', boxShadow: '0 0 50px rgba(0,0,0,0.9)' }}
+                />
+              </div>
 
               {heroEntries.length > 1 && (
                 <div style={{ position: 'absolute', bottom: 24, right: 30, display: 'flex', gap: 6, zIndex: 10 }}>
