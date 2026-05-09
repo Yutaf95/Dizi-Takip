@@ -527,6 +527,7 @@ export default function Home() {
         onClose={() => setIsSearchOpen(false)}
         onAdd={handleAddFromSearch}
         watchingEntries={entries.filter(e => e.status === 'watching')}
+        allEntries={entries}
       />
       {/* Film detail drawer */}
       <DetailDrawer

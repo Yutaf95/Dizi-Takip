@@ -9,6 +9,7 @@ interface SearchModalProps {
   onClose: () => void;
   onAdd: (item: any, status?: string) => void;
   watchingEntries?: Entry[];
+  allEntries?: Entry[];
 }
 
 interface RecommendedItem {
@@ -20,7 +21,7 @@ interface RecommendedItem {
   basedOn: string; // which show this was recommended because of
 }
 
-export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: SearchModalProps) {
+export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [], allEntries = [] }: SearchModalProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: Se
   const [addedIds, setAddedIds] = useState<Set<number>>(new Set());
 
   // Already-tracked tmdb ids for deduplication
-  const trackedIds = new Set(watchingEntries.map(e => e.tmdb_id));
+  const trackedIds = new Set(allEntries.map(e => e.tmdb_id));
 
   // Live search: fire 400ms after user stops typing
   useEffect(() => {
@@ -126,39 +127,39 @@ export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: Se
     return (
       <div
         style={{
-          display: 'flex', gap: 14, alignItems: 'center',
-          padding: '10px 12px', borderRadius: 10,
+          display: 'flex', gap: 16, alignItems: 'center',
+          padding: '12px 16px', borderRadius: 12,
           background: 'var(--bg-primary)',
           border: `1px solid ${already ? 'rgba(34,197,94,0.3)' : 'var(--border)'}`,
           transition: 'border-color 0.2s',
         }}
       >
-        <div style={{ width: 44, height: 64, borderRadius: 7, overflow: 'hidden', flexShrink: 0, background: 'var(--bg-secondary)' }}>
+        <div style={{ width: 66, height: 96, borderRadius: 8, overflow: 'hidden', flexShrink: 0, background: 'var(--bg-secondary)' }}>
           {item.poster_path ? (
-            <img src={`https://image.tmdb.org/t/p/w92${item.poster_path}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={`https://image.tmdb.org/t/p/w154${item.poster_path}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
             <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {isTV ? <Tv size={18} color="var(--text-muted)" /> : <Film size={18} color="var(--text-muted)" />}
+              {isTV ? <Tv size={24} color="var(--text-muted)" /> : <Film size={24} color="var(--text-muted)" />}
             </div>
           )}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <p style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {item.title || item.name}
           </p>
-          <div style={{ display: 'flex', gap: 6, marginTop: 3, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 8, marginTop: 6, alignItems: 'center', flexWrap: 'wrap' }}>
             <span style={{
-              fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 99, textTransform: 'uppercase',
+              fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 99, textTransform: 'uppercase',
               background: isTV ? 'rgba(59,130,246,0.15)' : 'rgba(230,57,70,0.15)',
               color: isTV ? 'var(--blue)' : 'var(--accent)',
             }}>
               {isTV ? 'Dizi' : 'Film'}
             </span>
-            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
               {(item.release_date || item.first_air_date || '').substring(0, 4) || '—'}
             </span>
             {item.vote_average > 0 && (
-              <span style={{ fontSize: 11, color: '#facc15' }}>★ {item.vote_average.toFixed(1)}</span>
+              <span style={{ fontSize: 12, color: '#facc15' }}>★ {item.vote_average.toFixed(1)}</span>
             )}
           </div>
         </div>
@@ -216,7 +217,7 @@ export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: Se
 
   return (
     <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal-box animate-in" style={{ maxWidth: 660 }}>
+      <div className="modal-box animate-in" style={{ maxWidth: 780 }}>
 
         {/* Header */}
         <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -264,10 +265,15 @@ export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: Se
           )}
           {!loading && results.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
                 Arama Sonuçları
               </p>
-              {results.map(item => <ResultRow key={item.id} item={item} />)}
+              {results.filter(item => !trackedIds.has(item.id) && !addedIds.has(item.id)).map(item => <ResultRow key={item.id} item={item} />)}
+              {results.filter(item => !trackedIds.has(item.id) && !addedIds.has(item.id)).length === 0 && (
+                <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '20px 0', fontSize: 14 }}>
+                  Tüm sonuçlar zaten listenizde ekli.
+                </p>
+              )}
             </div>
           )}
           {!loading && results.length === 0 && query && (
@@ -300,7 +306,7 @@ export function SearchModal({ isOpen, onClose, onAdd, watchingEntries = [] }: Se
                           <span style={{ color: 'var(--text-secondary)' }}>"{showName}"</span> dizisini sevdiysen:
                         </p>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                          {group.map(item => (
+                          {group.filter(item => !trackedIds.has(item.id) && !addedIds.has(item.id)).map(item => (
                             <ResultRow
                               key={item.id}
                               item={{
