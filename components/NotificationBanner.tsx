@@ -25,7 +25,7 @@ export function NotificationBanner({ notifications, onSelect }: NotificationBann
 
   const dismiss = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setDismissed(prev => new Set([...prev, id]));
+    setDismissed(prev => new Set(prev).add(id));
   };
 
   return (
