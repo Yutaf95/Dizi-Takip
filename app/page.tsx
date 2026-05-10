@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { supabase, Entry } from '@/lib/supabase';
 import { getShowDetails } from '@/lib/tmdb';
 import { SearchModal } from '@/components/SearchModal';
@@ -37,6 +37,51 @@ export default function Home() {
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
   const [showDetailEntry, setShowDetailEntry] = useState<Entry | null>(null);
   const [heroIndex, setHeroIndex] = useState(0);
+
+  // --- Modal History Management ---
+  const openModalsCount = [isSearchOpen, !!selectedEntry, !!showDetailEntry, isMobileMenuOpen, showProfileSelector].filter(Boolean).length;
+  const prevModalsCount = useRef(0);
+  const isPopping = useRef(false);
+  const isProgrammaticBack = useRef(false);
+
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (isProgrammaticBack.current) {
+        // This popstate was triggered by our own window.history.back() call to clean up.
+        isProgrammaticBack.current = false;
+        return;
+      }
+      
+      isPopping.current = true;
+      // Close highest priority modal first
+      if (isSearchOpen) setIsSearchOpen(false);
+      else if (showDetailEntry) setShowDetailEntry(null);
+      else if (selectedEntry) setSelectedEntry(null);
+      else if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+      else if (showProfileSelector) {
+        // Only allow closing profile selector via back if they already have an active profile
+        if (activeProfile) setShowProfileSelector(false);
+        else isPopping.current = false; // Don't allow closing if no profile
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isSearchOpen, selectedEntry, showDetailEntry, isMobileMenuOpen, showProfileSelector, activeProfile]);
+
+  useEffect(() => {
+    if (openModalsCount > prevModalsCount.current) {
+      window.history.pushState({ modalIndex: openModalsCount }, '');
+    } else if (openModalsCount < prevModalsCount.current) {
+      if (!isPopping.current) {
+        isProgrammaticBack.current = true;
+        window.history.back();
+      }
+    }
+    prevModalsCount.current = openModalsCount;
+    isPopping.current = false;
+  }, [openModalsCount]);
+  // --------------------------------
 
   // On mount: load profile from localStorage
   useEffect(() => {
