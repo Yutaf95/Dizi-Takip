@@ -127,13 +127,13 @@ export default function Home() {
     setIsMobileMenuOpen(false);
   };
 
-  // Rotate hero banner every 6 seconds
+  // Rotate hero banner every 10 seconds
   useEffect(() => {
     const heroEntries = entries.filter(e => e.poster_url);
     if (heroEntries.length <= 1) return;
     const timer = setInterval(() => {
       setHeroIndex(i => (i + 1) % heroEntries.length);
-    }, 6000);
+    }, 10000);
     return () => clearInterval(timer);
   }, [entries]);
 
@@ -465,22 +465,7 @@ export default function Home() {
                 />
               </div>
 
-              {heroEntries.length > 1 && (
-                <div style={{ position: 'absolute', bottom: 24, right: 30, display: 'flex', gap: 6, zIndex: 10 }}>
-                  {heroEntries.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setHeroIndex(i)}
-                      style={{
-                        width: i === heroIndex % heroEntries.length ? 20 : 6,
-                        height: 6, borderRadius: 99, border: 'none', cursor: 'pointer',
-                        background: i === heroIndex % heroEntries.length ? 'white' : 'rgba(255,255,255,0.35)',
-                        transition: 'all 0.3s', padding: 0,
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
+
             </div>
           )}
 
