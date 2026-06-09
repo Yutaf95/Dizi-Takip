@@ -7,7 +7,7 @@ import { DetailDrawer } from '@/components/DetailDrawer';
 import { ShowDetail } from '@/components/ShowDetail';
 import { NotificationBanner, ShowNotification } from '@/components/NotificationBanner';
 import { ProfileSelector, PROFILES, Profile } from '@/components/ProfileSelector';
-import { Plus, Search, Film, Tv, BookMarked, CheckCircle2, Play, Layers, Bell, Clapperboard, ChevronDown, Menu } from 'lucide-react';
+import { Plus, Search, Film, Tv, BookMarked, CheckCircle2, Play, Bell, Clapperboard, ChevronDown, Menu } from 'lucide-react';
 
 const SHOW_TABS = [
   { id: 'watching', label: 'İzleniyor', icon: <Play size={15} /> },
@@ -264,9 +264,7 @@ export default function Home() {
 
       <div className="mobile-top-bar">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Layers size={18} color="white" />
-          </div>
+          <img src="/logo.png" alt="DT" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'cover' }} />
           <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)' }}>Takipçi</span>
         </div>
         <button onClick={() => setIsMobileMenuOpen(true)} style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)' }}>
@@ -279,9 +277,7 @@ export default function Home() {
         {/* Logo */}
         <div style={{ padding: '0 24px 24px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 16px var(--accent-glow)' }}>
-              <Layers size={20} color="white" />
-            </div>
+            <img src="/logo.png" alt="DT" style={{ width: 36, height: 36, borderRadius: 10, objectFit: 'cover', boxShadow: '0 0 16px var(--accent-glow)' }} />
             <div>
               <p style={{ fontSize: 15, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>Takipçi</p>
               <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>Dizi & Film</p>
